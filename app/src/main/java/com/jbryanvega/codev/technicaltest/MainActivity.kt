@@ -7,11 +7,22 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import com.jbryanvega.codev.data.model.Job
+import com.jbryanvega.codev.data.repository.CoDevRepository
+import com.jbryanvega.codev.data.request.ApplicantBody
+import com.jbryanvega.codev.data.request.JobBody
 import com.jbryanvega.codev.technicaltest.databinding.ActivityMainBinding
+import dagger.hilt.android.AndroidEntryPoint
+import java.util.*
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+
+    @Inject
+    lateinit var repository: CoDevRepository
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

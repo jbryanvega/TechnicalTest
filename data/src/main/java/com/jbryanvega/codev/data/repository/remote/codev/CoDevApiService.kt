@@ -1,19 +1,15 @@
 package com.jbryanvega.codev.data.repository.remote.codev
 
+import androidx.lifecycle.LiveData
 import com.google.gson.JsonElement
+import com.jbryanvega.codev.data.model.Applicant
 import com.jbryanvega.codev.data.request.ApplicantBody
 import com.jbryanvega.codev.data.request.JobApplicantBody
 import com.jbryanvega.codev.data.request.JobBody
+import com.jbryanvega.codev.data.request.NewApplicantBody
+import com.jbryanvega.codev.lib.network.ApiResponse
 import retrofit2.Call
-import retrofit2.http.Body
-import retrofit2.http.DELETE
-import retrofit2.http.Field
-import retrofit2.http.GET
-import retrofit2.http.Headers
-import retrofit2.http.POST
-import retrofit2.http.PUT
-import retrofit2.http.Path
-import retrofit2.http.Query
+import retrofit2.http.*
 
 interface CoDevApiService {
 
@@ -23,6 +19,10 @@ interface CoDevApiService {
     @GET("api/Applicant/get/{id}")
     fun getApplicant(@Path("id") id: String): Call<JsonElement>
 
+    @Headers("Content-Type: application/json")
+    @GET("api/Applicant/get/{id}")
+    fun getApplicantLD(@Path("id") id: String): LiveData<ApiResponse<Applicant>>
+
 
     @Headers("Content-Type: application/json")
     @GET("api/Applicant/getall")
@@ -31,7 +31,7 @@ interface CoDevApiService {
 
     @Headers("Content-Type: application/json")
     @POST("api/Applicant/insert")
-    fun insertApplicant(@Body body: ApplicantBody): Call<JsonElement>
+    fun insertApplicant(@Body body: NewApplicantBody): Call<JsonElement>
 
 
     @Headers("Content-Type: application/json")
@@ -41,7 +41,7 @@ interface CoDevApiService {
 
     @Headers("Content-Type: application/json")
     @DELETE("api/Applicant/delete")
-    fun deleteApplicant(@Field("id") id: String): Call<JsonElement>
+    fun deleteApplicant(@Query("id") id: String): Call<JsonElement>
 
     // endregion Applicant
 
@@ -76,7 +76,7 @@ interface CoDevApiService {
 
     @Headers("Content-Type: application/json")
     @DELETE("api/Job/delete")
-    fun deleteJob(@Field("id") id: String): Call<JsonElement>
+    fun deleteJob(@Query("id") id: String): Call<JsonElement>
 
     // endregion Job
 
