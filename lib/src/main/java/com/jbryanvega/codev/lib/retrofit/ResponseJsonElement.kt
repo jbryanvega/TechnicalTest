@@ -1,4 +1,4 @@
-package com.jbryanvega.codev.data.retrofit
+package com.jbryanvega.codev.lib.retrofit
 
 import com.google.gson.Gson
 import com.google.gson.JsonElement

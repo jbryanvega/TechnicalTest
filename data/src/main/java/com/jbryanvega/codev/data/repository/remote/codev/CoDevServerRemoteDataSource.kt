@@ -4,8 +4,9 @@ import com.google.gson.JsonElement
 import com.jbryanvega.codev.data.request.ApplicantBody
 import com.jbryanvega.codev.data.request.JobApplicantBody
 import com.jbryanvega.codev.data.request.JobBody
-import com.jbryanvega.codev.data.retrofit.ResponseJsonElement.Companion.API_FAILURE_JSON_ELEMENT
-import com.jbryanvega.codev.data.retrofit.RetrofitResponseCallback
+import com.jbryanvega.codev.data.request.NewApplicantBody
+import com.jbryanvega.codev.lib.retrofit.ResponseJsonElement.Companion.API_FAILURE_JSON_ELEMENT
+import com.jbryanvega.codev.lib.retrofit.RetrofitResponseCallback
 import com.jbryanvega.codev.lib.thread.AppExecutors
 import retrofit2.Call
 import retrofit2.Callback
@@ -28,7 +29,7 @@ class CoDevServerRemoteDataSource
         enqueueRestCall(coDevRetrofitService.service().getAllApplicants(), callback)
     }
 
-    fun insertApplicant(body: ApplicantBody, callback: RetrofitResponseCallback) {
+    fun insertApplicant(body: NewApplicantBody, callback: RetrofitResponseCallback) {
         enqueueRestCall(coDevRetrofitService.service().insertApplicant(body), callback)
     }
 

@@ -1,9 +1,13 @@
 package com.jbryanvega.codev.data.repository.remote.codev
 
+import androidx.lifecycle.LiveData
 import com.google.gson.JsonElement
+import com.jbryanvega.codev.data.model.Applicant
 import com.jbryanvega.codev.data.request.ApplicantBody
 import com.jbryanvega.codev.data.request.JobApplicantBody
 import com.jbryanvega.codev.data.request.JobBody
+import com.jbryanvega.codev.data.request.NewApplicantBody
+import com.jbryanvega.codev.lib.network.ApiResponse
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -15,6 +19,10 @@ interface CoDevApiService {
     @GET("api/Applicant/get/{id}")
     fun getApplicant(@Path("id") id: String): Call<JsonElement>
 
+    @Headers("Content-Type: application/json")
+    @GET("api/Applicant/get/{id}")
+    fun getApplicantLD(@Path("id") id: String): LiveData<ApiResponse<Applicant>>
+
 
     @Headers("Content-Type: application/json")
     @GET("api/Applicant/getall")
@@ -23,7 +31,7 @@ interface CoDevApiService {
 
     @Headers("Content-Type: application/json")
     @POST("api/Applicant/insert")
-    fun insertApplicant(@Body body: ApplicantBody): Call<JsonElement>
+    fun insertApplicant(@Body body: NewApplicantBody): Call<JsonElement>
 
 
     @Headers("Content-Type: application/json")

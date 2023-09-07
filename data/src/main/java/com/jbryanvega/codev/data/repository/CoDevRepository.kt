@@ -1,19 +1,21 @@
 package com.jbryanvega.codev.data.repository
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import com.google.gson.Gson
 import com.google.gson.JsonElement
 import com.google.gson.reflect.TypeToken
+import com.jbryanvega.codev.data.events.ApplicantEvent
+import com.jbryanvega.codev.data.events.ApplicantsEvent
+import com.jbryanvega.codev.data.events.JobEvent
+import com.jbryanvega.codev.data.events.JobsEvent
 import com.jbryanvega.codev.data.model.Applicant
-import com.jbryanvega.codev.data.model.Applicants
 import com.jbryanvega.codev.data.model.Job
-import com.jbryanvega.codev.data.model.Jobs
 import com.jbryanvega.codev.data.repository.remote.codev.CoDevServerRemoteDataSource
 import com.jbryanvega.codev.data.request.ApplicantBody
 import com.jbryanvega.codev.data.request.JobApplicantBody
 import com.jbryanvega.codev.data.request.JobBody
-import com.jbryanvega.codev.data.retrofit.RetrofitResponseCallback
+import com.jbryanvega.codev.data.request.NewApplicantBody
+import com.jbryanvega.codev.lib.retrofit.RetrofitResponseCallback
+import org.greenrobot.eventbus.EventBus
 import retrofit2.Response
 import timber.log.Timber
 import javax.inject.Inject
@@ -23,20 +25,17 @@ import javax.inject.Singleton
 class CoDevRepository
 @Inject constructor(private val remoteDataSource: CoDevServerRemoteDataSource) : CoDevDataSource {
 
-    override fun getApplicant(id: String): LiveData<Applicant> {
-        val livedata = MutableLiveData<Applicant>()
-
-        lateinit var successResponse: Applicant
+    override fun getApplicant(id: String) {
         remoteDataSource.getApplicant(id, object: RetrofitResponseCallback {
             override fun onResponse(response: Response<JsonElement>) {
                 if (response.isSuccessful) {
                     response.body()?.let {
                         val type = object : TypeToken<Applicant?>() {}.type
-                        successResponse = Gson().fromJson(it, type)
+                        val successData: Applicant = Gson().fromJson(it, type)
 
-                        livedata.value = successResponse
+                        Timber.d("successData: $successData")
 
-                        Timber.d("successResponse: $successResponse")
+                        EventBus.getDefault().post(ApplicantEvent(successData))
                     }
                 }
             }
@@ -44,11 +43,9 @@ class CoDevRepository
             override fun onFailure(element: JsonElement, throwable: Throwable?) {
 
             }
-
         })
-
-        return livedata
     }
+
 
     override fun getAllApplicants() {
         remoteDataSource.getAllApplicants(object: RetrofitResponseCallback {
@@ -56,9 +53,11 @@ class CoDevRepository
                 if (response.isSuccessful) {
                     response.body()?.let {
                         val type = object : TypeToken<List<Applicant>?>() {}.type
-                        val successResponse: List<Applicant> = Gson().fromJson(it, type)
+                        val successData: List<Applicant> = Gson().fromJson(it, type)
 
-                        Timber.d("successResponse: $successResponse")
+                        Timber.d("successData: $successData")
+
+                        EventBus.getDefault().post(ApplicantsEvent(successData))
                     }
                 }
             }
@@ -70,18 +69,22 @@ class CoDevRepository
         })
     }
 
-    override fun insertApplicant(body: ApplicantBody) {
+    override fun insertApplicant(body: NewApplicantBody) {
         remoteDataSource.insertApplicant(body, object: RetrofitResponseCallback {
             override fun onResponse(response: Response<JsonElement>) {
                 if (response.isSuccessful) {
                     response.body()?.let {
-                        Timber.d("successResponse: $it")
+                        Timber.d("successData: $it")
                     }
+                } else {
+                    Timber.d(response.message())
                 }
+                getAllApplicants()
             }
 
             override fun onFailure(element: JsonElement, throwable: Throwable?) {
-
+                Timber.d(throwable)
+                getAllApplicants()
             }
 
         })
@@ -90,11 +93,11 @@ class CoDevRepository
     override fun updateApplicant(body: ApplicantBody) {
         remoteDataSource.updateApplicant(body, object: RetrofitResponseCallback {
             override fun onResponse(response: Response<JsonElement>) {
-
+                getAllApplicants()
             }
 
             override fun onFailure(element: JsonElement, throwable: Throwable?) {
-
+                getAllApplicants()
             }
 
         })
@@ -103,11 +106,11 @@ class CoDevRepository
     override fun deleteApplicant(id: String) {
         remoteDataSource.deleteApplicant(id, object: RetrofitResponseCallback {
             override fun onResponse(response: Response<JsonElement>) {
-
+                getAllApplicants()
             }
 
             override fun onFailure(element: JsonElement, throwable: Throwable?) {
-
+                getAllApplicants()
             }
 
         })
@@ -116,7 +119,16 @@ class CoDevRepository
     override fun getJob(keyword: String, jobIndustryType: Int) {
         remoteDataSource.getJob(keyword, jobIndustryType, object: RetrofitResponseCallback {
             override fun onResponse(response: Response<JsonElement>) {
+                if (response.isSuccessful) {
+                    response.body()?.let {
+                        val type = object : TypeToken<Job?>() {}.type
+                        val successData: Job = Gson().fromJson(it, type)
 
+                        Timber.d("successData: $successData")
+
+                        EventBus.getDefault().post(JobEvent(successData))
+                    }
+                }
             }
 
             override fun onFailure(element: JsonElement, throwable: Throwable?) {
@@ -132,9 +144,11 @@ class CoDevRepository
                 if (response.isSuccessful) {
                     response.body()?.let {
                         val type = object : TypeToken<Job?>() {}.type
-                        val successResponse: Job = Gson().fromJson(it, type)
+                        val successData: Job = Gson().fromJson(it, type)
 
-                        Timber.d("successResponse: $successResponse")
+                        Timber.d("successData: $successData")
+
+                        EventBus.getDefault().post(JobEvent(successData))
                     }
                 }
             }
@@ -152,9 +166,11 @@ class CoDevRepository
                 if (response.isSuccessful) {
                     response.body()?.let {
                         val type = object : TypeToken<List<Job>?>() {}.type
-                        val successResponse: List<Job> = Gson().fromJson(it, type)
+                        val successData: List<Job> = Gson().fromJson(it, type)
 
-                        Timber.d("successResponse: $successResponse")
+                        Timber.d("successData: $successData")
+
+                        EventBus.getDefault().post(JobsEvent(successData))
                     }
                 }
             }
@@ -169,11 +185,11 @@ class CoDevRepository
     override fun insertJob(body: JobBody) {
         remoteDataSource.insertJob(body, object: RetrofitResponseCallback {
             override fun onResponse(response: Response<JsonElement>) {
-
+                getAllJobs()
             }
 
             override fun onFailure(element: JsonElement, throwable: Throwable?) {
-
+                getAllJobs()
             }
 
         })
@@ -182,11 +198,11 @@ class CoDevRepository
     override fun updateJob(body: JobBody) {
         remoteDataSource.updateJob(body, object: RetrofitResponseCallback {
             override fun onResponse(response: Response<JsonElement>) {
-
+                getAllJobs()
             }
 
             override fun onFailure(element: JsonElement, throwable: Throwable?) {
-
+                getAllJobs()
             }
 
         })
@@ -195,11 +211,11 @@ class CoDevRepository
     override fun deleteJob(id: String) {
         remoteDataSource.deleteJob(id, object: RetrofitResponseCallback {
             override fun onResponse(response: Response<JsonElement>) {
-
+                getAllJobs()
             }
 
             override fun onFailure(element: JsonElement, throwable: Throwable?) {
-
+                getAllJobs()
             }
 
         })
