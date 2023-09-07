@@ -5,15 +5,7 @@ import com.jbryanvega.codev.data.request.ApplicantBody
 import com.jbryanvega.codev.data.request.JobApplicantBody
 import com.jbryanvega.codev.data.request.JobBody
 import retrofit2.Call
-import retrofit2.http.Body
-import retrofit2.http.DELETE
-import retrofit2.http.Field
-import retrofit2.http.GET
-import retrofit2.http.Headers
-import retrofit2.http.POST
-import retrofit2.http.PUT
-import retrofit2.http.Path
-import retrofit2.http.Query
+import retrofit2.http.*
 
 interface CoDevApiService {
 
@@ -41,7 +33,7 @@ interface CoDevApiService {
 
     @Headers("Content-Type: application/json")
     @DELETE("api/Applicant/delete")
-    fun deleteApplicant(@Field("id") id: String): Call<JsonElement>
+    fun deleteApplicant(@Query("id") id: String): Call<JsonElement>
 
     // endregion Applicant
 
@@ -76,7 +68,7 @@ interface CoDevApiService {
 
     @Headers("Content-Type: application/json")
     @DELETE("api/Job/delete")
-    fun deleteJob(@Field("id") id: String): Call<JsonElement>
+    fun deleteJob(@Query("id") id: String): Call<JsonElement>
 
     // endregion Job
 

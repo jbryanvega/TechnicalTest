@@ -1,12 +1,14 @@
 package com.jbryanvega.codev.data.repository;
 
+import androidx.lifecycle.LiveData
+import com.jbryanvega.codev.data.model.Applicant
 import com.jbryanvega.codev.data.request.ApplicantBody;
 import com.jbryanvega.codev.data.request.JobApplicantBody;
 import com.jbryanvega.codev.data.request.JobBody;
 
 interface CoDevDataSource {
 
-    fun getApplicant(id: String)
+    fun getApplicant(id: String): LiveData<Applicant>
     fun getAllApplicants()
     fun insertApplicant(body: ApplicantBody)
     fun updateApplicant(body:ApplicantBody)

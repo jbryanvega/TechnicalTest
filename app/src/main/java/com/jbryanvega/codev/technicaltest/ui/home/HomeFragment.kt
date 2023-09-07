@@ -8,7 +8,9 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.jbryanvega.codev.technicaltest.databinding.FragmentHomeBinding
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
@@ -29,8 +31,12 @@ class HomeFragment : Fragment() {
         val root: View = binding.root
 
         val textView: TextView = binding.textHome
+        val textViewApplicant: TextView = binding.textApplicant
         homeViewModel.text.observe(viewLifecycleOwner) {
             textView.text = it
+        }
+        homeViewModel.applicant.observe(viewLifecycleOwner) {
+            textViewApplicant.text = String.format("%s %s %s", it.id, it.fullName, it.emailAddress)
         }
         return root
     }
