@@ -9,7 +9,9 @@
         <variable
             name="job"
             type="com.jbryanvega.codev.data.model.Job" />
-
+        <variable
+            name="itemClickListener"
+            type="com.jbryanvega.codev.technicaltest.ui.dashboard.JobItemEventListener" />
     </data>
 
     <androidx.appcompat.widget.LinearLayoutCompat
@@ -28,7 +30,8 @@
                 android:id="@+id/jobId"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="job id"
+                android:text="@{job.id}"
+                android:hint="job id"
                 tools:ignore="HardcodedText"
                 android:layout_marginTop="4dp"/>
 
@@ -36,50 +39,63 @@
                 android:id="@+id/jobNoOfOpenings"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="job number of openings"
+                android:text="@{String.valueOf(job.noOfOpenings)}"
+                android:hint="job number of openings"
                 tools:ignore="HardcodedText" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/jobTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="job title"
+                android:text="@{job.title}"
+                android:hint="job title"
                 tools:ignore="HardcodedText"/>
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/jobDescription"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="job description"
+                android:text="@{job.description}"
+                android:hint="job description"
                 tools:ignore="HardcodedText"/>
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/jobIndustry"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="job industry"
+                android:text="@{String.valueOf(job.industry)}"
+                android:hint="job industry"
                 tools:ignore="HardcodedText"
                 android:layout_marginBottom="4dp"/>
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/jobDelete"
+        <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="delete"
-            android:layout_marginEnd="8dp"
-            tools:ignore="HardcodedText" />
+            android:orientation="vertical">
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/jobUpdate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="update"
-            android:layout_marginEnd="8dp"
-            tools:ignore="HardcodedText" />
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/jobDelete"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="delete"
+                android:layout_marginEnd="8dp"
+                tools:ignore="HardcodedText"
+                android:onClick="@{() -> itemClickListener.onJobDelete(job.id)}"/>
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/jobUpdate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="update"
+                android:layout_marginEnd="8dp"
+                tools:ignore="HardcodedText"
+                android:onClick="@{() -> itemClickListener.onJobUpdate(job.id)}"/>
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 

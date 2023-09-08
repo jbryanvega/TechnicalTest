@@ -1,10 +1,7 @@
 package com.jbryanvega.codev.data.repository.remote.codev
 
 import com.google.gson.JsonElement
-import com.jbryanvega.codev.data.request.ApplicantBody
-import com.jbryanvega.codev.data.request.JobApplicantBody
-import com.jbryanvega.codev.data.request.JobBody
-import com.jbryanvega.codev.data.request.NewApplicantBody
+import com.jbryanvega.codev.data.request.*
 import com.jbryanvega.codev.lib.retrofit.ResponseJsonElement.Companion.API_FAILURE_JSON_ELEMENT
 import com.jbryanvega.codev.lib.retrofit.RetrofitResponseCallback
 import com.jbryanvega.codev.lib.thread.AppExecutors
@@ -47,8 +44,8 @@ class CoDevServerRemoteDataSource
 
     // region Job
 
-    fun getJob(keyword: String, jobIndustryType: Int, callback: RetrofitResponseCallback) {
-        enqueueRestCall(coDevRetrofitService.service().getJob(keyword, jobIndustryType), callback)
+    fun getJobs(keyword: String, jobIndustryType: Int, callback: RetrofitResponseCallback) {
+        enqueueRestCall(coDevRetrofitService.service().getJobs(keyword, jobIndustryType), callback)
     }
 
     fun getJob(id: String, callback: RetrofitResponseCallback) {
@@ -59,7 +56,7 @@ class CoDevServerRemoteDataSource
         enqueueRestCall(coDevRetrofitService.service().getAllJobs(), callback)
     }
 
-    fun insertJob(body: JobBody, callback: RetrofitResponseCallback) {
+    fun insertJob(body: NewJobBody, callback: RetrofitResponseCallback) {
         enqueueRestCall(coDevRetrofitService.service().insertJob(body), callback)
     }
 

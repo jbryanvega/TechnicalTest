@@ -10,10 +10,7 @@ import com.jbryanvega.codev.data.events.JobsEvent
 import com.jbryanvega.codev.data.model.Applicant
 import com.jbryanvega.codev.data.model.Job
 import com.jbryanvega.codev.data.repository.remote.codev.CoDevServerRemoteDataSource
-import com.jbryanvega.codev.data.request.ApplicantBody
-import com.jbryanvega.codev.data.request.JobApplicantBody
-import com.jbryanvega.codev.data.request.JobBody
-import com.jbryanvega.codev.data.request.NewApplicantBody
+import com.jbryanvega.codev.data.request.*
 import com.jbryanvega.codev.lib.retrofit.RetrofitResponseCallback
 import org.greenrobot.eventbus.EventBus
 import retrofit2.Response
@@ -116,17 +113,17 @@ class CoDevRepository
         })
     }
 
-    override fun getJob(keyword: String, jobIndustryType: Int) {
-        remoteDataSource.getJob(keyword, jobIndustryType, object: RetrofitResponseCallback {
+    override fun getJobs(keyword: String, jobIndustryType: Int) {
+        remoteDataSource.getJobs(keyword, jobIndustryType, object: RetrofitResponseCallback {
             override fun onResponse(response: Response<JsonElement>) {
                 if (response.isSuccessful) {
                     response.body()?.let {
-                        val type = object : TypeToken<Job?>() {}.type
-                        val successData: Job = Gson().fromJson(it, type)
+                        val type = object : TypeToken<List<Job>?>() {}.type
+                        val successData: List<Job> = Gson().fromJson(it, type)
 
                         Timber.d("successData: $successData")
 
-                        EventBus.getDefault().post(JobEvent(successData))
+                        EventBus.getDefault().post(JobsEvent(successData))
                     }
                 }
             }
@@ -182,7 +179,7 @@ class CoDevRepository
         })
     }
 
-    override fun insertJob(body: JobBody) {
+    override fun insertJob(body: NewJobBody) {
         remoteDataSource.insertJob(body, object: RetrofitResponseCallback {
             override fun onResponse(response: Response<JsonElement>) {
                 getAllJobs()

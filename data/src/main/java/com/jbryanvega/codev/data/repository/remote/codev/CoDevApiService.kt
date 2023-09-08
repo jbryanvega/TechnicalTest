@@ -3,10 +3,7 @@ package com.jbryanvega.codev.data.repository.remote.codev
 import androidx.lifecycle.LiveData
 import com.google.gson.JsonElement
 import com.jbryanvega.codev.data.model.Applicant
-import com.jbryanvega.codev.data.request.ApplicantBody
-import com.jbryanvega.codev.data.request.JobApplicantBody
-import com.jbryanvega.codev.data.request.JobBody
-import com.jbryanvega.codev.data.request.NewApplicantBody
+import com.jbryanvega.codev.data.request.*
 import com.jbryanvega.codev.lib.network.ApiResponse
 import retrofit2.Call
 import retrofit2.http.*
@@ -52,8 +49,8 @@ interface CoDevApiService {
 
     @Headers("Content-Type: application/json")
     @GET("api/Job/filter")
-    fun getJob(@Query("keyword") keyword: String,
-               @Query("jobIndustryType") jobIndustryType: Int): Call<JsonElement>
+    fun getJobs(@Query("keyword") keyword: String,
+                @Query("jobIndustryType") jobIndustryType: Int): Call<JsonElement>
 
     @Headers("Content-Type: application/json")
     @GET("api/Job/get/{id}")
@@ -66,7 +63,7 @@ interface CoDevApiService {
 
     @Headers("Content-Type: application/json")
     @POST("api/Job/insert")
-    fun insertJob(@Body body: JobBody): Call<JsonElement>
+    fun insertJob(@Body body: NewJobBody): Call<JsonElement>
 
 
     @Headers("Content-Type: application/json")

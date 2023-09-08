@@ -23,13 +23,7 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel
 @Inject constructor(application: Application,
-                    private val coDevRetrofitService: CoDevRetrofitService,
                     private val repository: CoDevRepository): BaseViewModel(application) {
-
-    private val _text = MutableLiveData<String>().apply {
-        value = "This is home Fragment"
-    }
-    val text: LiveData<String> = _text
 
     private val _applicant = MutableLiveData<Applicant>()
     val applicant: LiveData<Applicant> = _applicant
@@ -40,7 +34,6 @@ class HomeViewModel
     init {
         EventBus.getDefault().register(this)
 
-        repository.getApplicant("8856ad1b-c365-4cce-84df-97e13a65834c")
         repository.getAllApplicants()
     }
 
